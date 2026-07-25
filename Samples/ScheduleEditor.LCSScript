@@ -1,0 +1,408 @@
+﻿Include Library/.Net10.0.0/SQLite.LCSScriptInclude
+
+########################################## Globals
+
+DataBase = _
+
+CardResult = _
+
+EventFilter = _
+
+ChooserParameter = _
+ChooserResult = _
+
+EventEditorParameter = _
+
+EventViewerParameter = _
+
+#Debugger("Globals", DataBase, CardResult, EventFilter, ChooserParameter, ChooserResult, EventEditorParameter, EventViewerParameter)
+
+########################################## DynamicUI Events
+
+Function OnStartUp()
+{
+	Debugger("OnStartUp")
+}
+
+Function OnShutDown()
+{
+	ReturnIf(DynamicUI:AlertQuestion("Demo", "Exit app?") == False, True)
+
+	DataBase:Close()
+	DataBase:Dispose()
+	DataBase = _
+
+	Return(False)
+}
+
+Function Sign()
+{
+	Return("Schedule Editor, R1, @LCosta 2025")
+}
+
+########################################## App Events: Landing
+
+Function OnLandingLoad()
+{
+	#Debugger("OnLandingLoad")
+
+	DataBase = SQLite:CreateConnection("Data Source=D:\\MyHub\\Alerts\\Schedules.sqlite")
+	DataBase:Open()
+
+	Command = DataBase:CreateCommand()
+
+	#############################
+
+	Command:CommandText = "SELECT [Events].[ID], [Events].[Description], [EventClassifications].[pt-PT], [EventFrequencies].[pt-PT], [Date] FROM [Events] INNER JOIN [EventClassifications] ON [Events].[EventClassificationID] = [EventClassifications].[ID] INNER JOIN [EventFrequencies] ON [Events].[EventFrequencyID] = [EventFrequencies].[ID] ORDER BY [Events].[Description]"
+
+	Reader = Command:ExecuteReader()
+
+	DynamicUI:Fill("Agendamento", Reader)
+
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+
+	#############################
+
+	Command:CommandText = "SELECT [ID], [pt-PT] FROM [EventClassifications] ORDER BY [pt-PT]"
+	
+	Reader = Command:ExecuteReader()
+	
+	DynamicUI:Fill("Classificacao", Reader)
+	
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+
+	#############################
+
+	DynamicUI:Fill("Tabelas", 
+	[
+		["Agendamentos", "0"],
+		["Classificações", "1"],
+		["Frequências", "2"]
+	])
+
+	#############################
+
+	Command:CommandText = "SELECT [ID], [pt-PT] FROM [EventFrequencies] ORDER BY [pt-PT]"
+	
+	Reader = Command:ExecuteReader()
+	
+	DynamicUI:Fill("Frequencia", Reader)
+	
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+
+	#############################
+
+	Command:Dispose()
+
+	EventFilter = CreateType(EventFilter, "", "", "", "", "")
+	ChooserResult = CreateType(ChooserResult, "", "")
+
+	DynamicUI:Select("Tabelas", "0")
+}
+
+Function OnLandingFilter()
+{
+	DynamicUI:Open("Agendamento", "LandingFilter", NullString)
+}
+
+Function OnLandingEdit(Key)
+{
+	EventEditorParameter = Key
+
+	DynamicUI:Open("Agendamento", "EventEditor", "Alterar Agendamento")
+}
+
+Function OnLandingNew()
+{
+	EventEditorParameter = _
+
+	DynamicUI:Open("Agendamento", "EventEditor", "Criar Agendamento")
+}
+
+Function OnLandingComeBack()
+{
+	#Debugger("OnLandingComeBack", CardResult)
+
+	ReturnIf(CardResult == False, _)
+
+	WhereClause = CreateStringer()
+	If(EventFilter:Description <> "")
+	{
+		WhereClause:Append("[Events].[Description] LIKE '%",  EventFilter:Description, "%'")
+	}
+	If(EventFilter:ClassificationKey <> "")
+	{
+		WhereClause:AppendSeparated(" AND ", "[Events].[EventClassificationID] = '", EventFilter:ClassificationKey, "'")
+	}
+	If(EventFilter:FrequencyKey <> "")
+	{
+		WhereClause:AppendSeparated(" AND ", "[Events].[EventFrequencyID] = '", EventFilter:FrequencyKey, "'")
+	}
+	WhereClause:PrefixIfNeeded(" WHERE ")
+	
+	Command = DataBase:CreateCommand()
+	Command:CommandText = "SELECT [Events].[ID], [Events].[Description], [EventClassifications].[pt-PT], [EventFrequencies].[pt-PT], [Date] FROM [Events] INNER JOIN [EventClassifications] ON [Events].[EventClassificationID] = [EventClassifications].[ID] INNER JOIN [EventFrequencies] ON [Events].[EventFrequencyID] = [EventFrequencies].[ID]" + WhereClause:ToString() + " ORDER BY [Events].[Description]"
+
+	Reader = Command:ExecuteReader()
+
+	DynamicUI:Fill("Agendamento", Reader)
+	If(EventEditorParameter:IsNotEmpty())
+	{
+		DynamicUI:Select("Agendamento", EventEditorParameter)
+		EventEditorParameter = _
+	}
+
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+
+	Command:Dispose()
+}
+
+Function OnLandingDelete(Key)
+{
+	EventEditorParameter = Key
+	EventViewerParameter  = "Delete"
+
+	DynamicUI:Open("Agendamento", "EventViewer", "Apagar Agendamento")
+}
+
+Function OnLookUpTableSelectionChanged(Key)
+{
+	If(Key == "0")
+	{
+		DynamicUI:Activate("Shared", "Agendamento")
+	}
+	Else(Key == "1")
+	{
+		DynamicUI:Activate("Shared", "Classificacao")
+	}
+	Else(Key == "2")
+	{
+		DynamicUI:Activate("Shared", "Frequencia")
+	}
+	Else()
+	{
+		DynamicUI:Activate("Shared", "")
+	}
+}
+
+########################################## App Events: LandingFilter
+
+Function OnLandingFilterLoad()
+{
+	DynamicUI:SetField("Agendamento", "Description", EventFilter:Description, "")
+	DynamicUI:SetField("Agendamento", "Classification", EventFilter:ClassificationText, EventFilter:ClassificationKey)
+	DynamicUI:SetField("Agendamento", "Frequency", EventFilter:FrequencyText, EventFilter:FrequencyKey)
+}
+
+Function OnLandingFilterConfirm()
+{
+	CardResult = True
+
+	FieldData = DynamicUI:GetField("Agendamento", "Description")
+	EventFilter:Description = FieldData:Text
+
+	FieldData = DynamicUI:GetField("Agendamento", "Classification")
+	EventFilter:ClassificationText = FieldData:Text
+	EventFilter:ClassificationKey = FieldData:Key
+
+	FieldData = DynamicUI:GetField("Agendamento", "Frequency")
+	EventFilter:FrequencyText = FieldData:Text
+	EventFilter:FrequencyKey = FieldData:Key
+
+	DynamicUI:Close("Agendamento")
+}
+
+########################################## App Events: Chooser
+
+Function OnChooserLoad()
+{
+	Command = DataBase:CreateCommand()
+		
+	If(ChooserParameter == "Classification")
+	{
+		Command:CommandText = "SELECT [EventClassifications].[ID], [EventClassifications].[pt-PT] FROM [EventClassifications] ORDER BY [EventClassifications].[pt-PT]"
+	}
+	Else(ChooserParameter == "Frequency")
+	{
+		Command:CommandText = "SELECT [EventFrequencies].[ID], [EventFrequencies].[pt-PT] FROM [EventFrequencies] ORDER BY [EventFrequencies].[pt-PT]"
+	}
+	
+	Reader = Command:ExecuteReader()
+
+	DynamicUI:Fill("Agendamento", Reader)
+
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+
+	Command:Dispose()
+}
+
+Function OnChooserCancel()
+{
+	CardResult = False
+
+	DynamicUI:Close("Agendamento")
+}
+
+Function OnChooserConfirm(Text, Key)
+{
+	CardResult = True
+
+	ChooserResult:Text = Text
+	ChooserResult:Key = Key
+
+	DynamicUI:Close("Agendamento")
+}
+
+########################################## App Events: EventEditor
+
+Function OnEventEditorLoad()
+{
+	ReturnIf(EventEditorParameter:IsEmpty(), _)
+
+	Command = DataBase:CreateCommand()
+	Command:CommandText = "SELECT [Events].[Description], [Date], [DaysOfNotice], [EventClassifications].[ID], [EventClassifications].[pt-PT], [EventFrequencies].[ID], [EventFrequencies].[pt-PT] FROM [Events] INNER JOIN [EventClassifications] ON [Events].[EventClassificationID] = [EventClassifications].[ID] INNER JOIN [EventFrequencies] ON [Events].[EventFrequencyID] = [EventFrequencies].[ID] WHERE [Events].[ID] = '" + EventEditorParameter + "' LIMIT 1"
+	
+	Reader = Command:ExecuteReader()
+	Reader:Read()
+	
+	DynamicUI:SetField("Agendamento", "Description", Reader:GetString(0:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "Date", Reader:GetString(1:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "DaysOfNotice", Reader:GetString(2:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "Classification", Reader:GetString(4:AsInt32()), Reader:GetString(3:AsInt32()))
+	DynamicUI:SetField("Agendamento", "Frequency", Reader:GetString(6:AsInt32()), Reader:GetString(5:AsInt32()))
+	
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+	
+	Command:Dispose()
+}
+
+Function OnEventEditorConfirm()
+{
+	#Date = DynamicUI:CreateDate(DynamicUI:GetFieldText("Agendamento", "Date"))
+	#DaysOfNotice = DynamicUI:CreateDouble(DynamicUI:GetFieldText(""Agendamento", DaysOfNotice"))
+	#FrequencyID = DynamicUI:GetFieldKey(""Agendamento", Frequency")
+
+	#DueDate = _
+	#Now = DynamicUI:CreateDate()
+	#IfGreaterOrEqual (Date:CompareTo(Now), 0)
+	#{
+	#	DynamicUI:Alert">"
+	#}
+	#Else()
+	#{
+	#}
+
+	Date = DynamicUI:GetFieldText("Agendamento", "Date")
+	DaysOfNotice = DynamicUI:GetFieldText("Agendamento", "DaysOfNotice")
+	NoticeDate = DynamicUI:CreateDate(Date):Subtract(DynamicUI:CreateTimeSpan(DaysOfNotice)):ToString("yyyyMMdd")
+
+	Command = DataBase:CreateCommand()
+
+	If(EventEditorParameter:IsEmpty())
+	{
+		EventEditorParameter = DynamicUI:CreateSQLiteGUID()
+		
+		Command:CommandText = "INSERT INTO [Events] ([ID], [Description], [Date], [DaysOfNotice], [EventClassificationID], [EventFrequencyID], [DueDate], [NoticeDate]) VALUES ('" + EventEditorParameter + "', '" + DynamicUI:GetFieldText("Agendamento", "Description") + "', '" + Date + "', " + DaysOfNotice + ", " + DynamicUI:GetFieldKey("Agendamento", "Classification") + ", " + DynamicUI:GetFieldKey("Agendamento", "Frequency") + ", '" + Date + "', '" + NoticeDate + "')"
+	}
+	Else()
+	{
+		Command:CommandText = "UPDATE [Events] SET [Description] = '" + DynamicUI:GetFieldText("Agendamento", "Description") + "', [Date] = '" + Date + "', [DaysOfNotice] = " + DaysOfNotice + ", [EventClassificationID] = " + DynamicUI:GetFieldKey("Agendamento", "Classification") + ", [EventFrequencyID] = " + DynamicUI:GetFieldKey("Agendamento", "Frequency") + ", [DueDate] = '" + Date + "', [NoticeDate] = '" + NoticeDate + "' WHERE [ID] = '" + EventEditorParameter + "'"
+	}
+
+	Command:ExecuteNonQuery()
+
+	Command:Dispose()
+
+	CardResult = True
+
+	DynamicUI:Close("Agendamento")
+}
+
+########################################## App Events: EventViewer
+
+Function OnEventViewerLoad()
+{
+	Command = DataBase:CreateCommand()
+	Command:CommandText = "SELECT [Events].[Description], [Date], [DaysOfNotice], [EventClassifications].[pt-PT], [EventFrequencies].[pt-PT] FROM [Events] INNER JOIN [EventClassifications] ON [Events].[EventClassificationID] = [EventClassifications].[ID] INNER JOIN [EventFrequencies] ON [Events].[EventFrequencyID] = [EventFrequencies].[ID] WHERE [Events].[ID] = '" + EventEditorParameter + "' LIMIT 1"
+	
+	Reader = Command:ExecuteReader()
+	Reader:Read()
+	
+	DynamicUI:SetField("Agendamento", "Description", Reader:GetString(0:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "Date", Reader:GetString(1:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "DaysOfNotice", Reader:GetString(2:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "Classification", Reader:GetString(3:AsInt32()), "")
+	DynamicUI:SetField("Agendamento", "Frequency", Reader:GetString(4:AsInt32()), "")
+	
+	Reader:Close()
+	Reader:DisposeAsync():GetAwaiter():GetResult()
+	
+	Command:Dispose()
+}
+
+Function OnEventViewerConfirm()
+{
+	Command = DataBase:CreateCommand()
+	Command:CommandText = "DELETE FROM [Events] WHERE [ID] = '" + EventEditorParameter +"'"
+
+	Command:ExecuteNonQuery()
+
+	Command:Dispose()
+
+	EventEditorParameter = _
+
+	CardResult = True
+
+	DynamicUI:Close("Agendamento")
+}
+ 
+########################################## App Events: LandingFilter, EventEditor
+
+Function OnLandingFilterEventEditorFieldLookUp(Name)
+{
+	ChooserParameter = Name
+	Title = _
+	If(Name == "Classification")
+	{
+		Title = "Classificações"
+	}
+	Else(Name == "Frequency")
+	{
+		Title = "Frequências"
+	}
+
+	DynamicUI:Open("Agendamento", "Chooser", Title)
+}
+
+Function OnLandingFilterEventEditorComeBack()
+{
+	ReturnIf(CardResult == False, _)
+
+	DynamicUI:SetField("Agendamento", ChooserParameter, ChooserResult:Text, ChooserResult:Key)
+}
+
+Function OnLandingFilterEventEditorFieldReset(Name)
+{
+	DynamicUI:SetField("Agendamento", Name, "", "")
+}
+
+########################################## App Events: LandingFilter, EventEditor, EventViewer
+
+Function OnLandingFilterEventEditorEventViewerCancel()
+{
+	CardResult = False
+
+	DynamicUI:Close("Agendamento")
+}
+
+########################################## Types
+
+Type EventFilter(Description, ClassificationKey, ClassificationText, FrequencyKey, FrequencyText)
+
+Type ChooserResult(Key, Text)
