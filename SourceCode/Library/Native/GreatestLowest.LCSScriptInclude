@@ -1,0 +1,11 @@
+﻿Function GetGreatest(Value1, Value2)
+{
+	ReturnIf(Value1 > Value2, Value1)
+	Return(Value2)
+}
+
+Function GetLowest(Value1, Value2)
+{
+	ReturnIf(Value1 < Value2, Value1)
+	Return(Value2)
+}

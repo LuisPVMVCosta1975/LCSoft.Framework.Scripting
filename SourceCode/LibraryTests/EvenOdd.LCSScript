@@ -1,0 +1,22 @@
+﻿#Tests For EvenOdd.LCSScriptInclude
+
+Include Library/Native/EvenOdd.LCSScriptInclude
+
+#Setup
+
+A = 1
+B = 2
+
+#Test
+
+C1 = IsEven(A)
+C2 = IsEven(B)
+C3 = IsOdd(A)
+C4 = IsOdd(B)
+
+#Assert
+
+ReturnIf(C1 <> False, "C1: " + C1)
+ReturnIf(C2 <> True, "C2: " + C2)
+ReturnIf(C3 <> True, "C3: " + C3)
+ReturnIf(C4 <> False, "C4: " + C4)

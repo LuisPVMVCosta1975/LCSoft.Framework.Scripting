@@ -1,0 +1,46 @@
+Type CompareListsResult(List1Only, List2Only, Common)
+Type CompareListsResultCommon(List1, List2)
+
+Function CompareLists(List1, List2, Comparer)
+{
+	Result = CreateType(CompareListsResult, CreateList(), CreateList(), CreateList())
+	
+	ForEach(Item1, List1)
+	{
+		IsNotFound = True
+		ForEach(Item2, List2)
+		{
+			If(Comparer:Eval())
+			{
+				IsNotFound = False
+				Result:Common:Append(CreateType(CompareListsResultCommon, Item1, Item2))
+				Break(2)
+			}
+		}
+
+		If(IsNotFound)
+		{
+			Result:List1Only:Append(Item1)
+		}
+	}
+
+	ForEach(Item2, List2)
+	{
+		IsNotFound = True
+		ForEach(Item1, List1)
+		{
+			If(Comparer:Eval())
+			{
+				IsNotFound = False
+				Break(2)
+			}
+		}
+
+		If(IsNotFound)
+		{
+			Result:List2Only:Append(Item2)
+		}
+	}
+	
+	Return(Result)
+}

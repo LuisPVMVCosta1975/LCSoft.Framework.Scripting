@@ -1,0 +1,21 @@
+﻿#Tests For Math.LCSScriptInclude
+
+Include Library/Native/Math.LCSScriptInclude
+
+#Setup
+
+A = 1
+B = -1.1
+C = 0
+
+#Test
+
+C1 = GetAbsolute(A)
+C2 = GetAbsolute(B)
+C3 = GetAbsolute(C)
+
+#Assert
+
+ReturnIf(C1 <> 1, "C1: " + C1)
+ReturnIf(C2 <> 1.1, "C2: " + C2)
+ReturnIf(C3 <> 0, "C3: " + C3)

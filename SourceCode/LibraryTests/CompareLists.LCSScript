@@ -1,0 +1,29 @@
+#Tests For CompareLists.LCSScriptInclude
+
+Include Library/Native/CompareLists.LCSScriptInclude
+
+#Setup
+
+Type Item1(Key, Value)
+Type Item2(ID, Value1, Value2)
+
+A = CreateList(CreateType(Item1, 1), CreateType(Item1, 2), CreateType(Item1, 3))
+B = CreateList(CreateType(Item2, "2"), CreateType(Item2, "3"), CreateType(Item2, "4"))
+
+#A = CreateList(1, 2, 3)
+#B = CreateList("2", "3", "4")
+
+#Test
+
+C1 = CompareLists(A, B, CreateLambda(Item1:Key:ToString() == Item2:ID))
+
+#C1 = CompareLists(A, B, CreateLambda(Item1 == Item2))
+
+#Assert
+
+C2 = C1:List1Only:Length
+ReturnIf(C2 <> 1, "C2: " + C2)
+C3 = C1:List2Only:Length
+ReturnIf(C3 <> 1, "C3: " + C3)
+C4 = C1:Common:Length
+ReturnIf(C4 <> 2, "C4: " + C4)

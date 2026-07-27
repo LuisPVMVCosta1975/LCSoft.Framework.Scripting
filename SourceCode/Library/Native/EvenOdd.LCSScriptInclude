@@ -1,0 +1,9 @@
+﻿Function IsEven(Value)
+{
+	Return((Value & 1) == 0)
+}
+
+Function IsOdd(Value)
+{
+	Return((Value & 1) == 1)
+}

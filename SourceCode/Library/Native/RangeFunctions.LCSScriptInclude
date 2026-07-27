@@ -1,0 +1,64 @@
+﻿Enum RangeSelectorEnum
+{
+	Ignore = 0
+	Length = 1
+	PositionInclusive = 2
+	PositionExclusive = 3
+}
+
+Function DropStart(Collection, RangeSelector, Value)
+{
+	ReturnIf(RangeSelector == RangeSelectorEnum:PositionInclusive, Collection:DropRange(0, Value + 1))
+	Return(Collection:DropRange(0, Value))
+}
+
+Function DropMiddle(Collection, StartRangeSelector, StartValue, EndRangeSelector, EndValue)
+{
+	StartLocation = _GetStartLocation(StartRangeSelector, StartValue)
+	EndLocation = _GetEndLocation(Collection, EndRangeSelector, EndValue)
+	Return(Collection:DropRange(StartLocation, EndLocation - StartLocation + 1))
+}
+
+Function DropEnd(Collection, RangeSelector, Value)
+{
+	ReturnIf(RangeSelector == RangeSelectorEnum:Length, Collection:DropRange(Collection:Length - Value, Value))
+	ReturnIf(RangeSelector == RangeSelectorEnum:PositionInclusive, Collection:DropRange(Value, Collection:Length - Value))
+	Return(Collection:DropRange(Value + 1, Collection:Length - Value - 1))
+}
+
+Function TakeStart(Collection, RangeSelector, Value)
+{
+	ReturnIf(RangeSelector == RangeSelectorEnum:PositionInclusive, Collection:TakeRange(0, Value + 1))
+	Return(Collection:TakeRange(0, Value))
+}
+
+Function TakeMiddle(Collection, StartRangeSelector, StartValue, EndRangeSelector, EndValue)
+{
+	StartLocation = _GetStartLocation(StartRangeSelector, StartValue)
+	EndLocation = _GetEndLocation(Collection, EndRangeSelector, EndValue)
+	Return(Collection:TakeRange(StartLocation, EndLocation - StartLocation + 1))
+}
+
+Function TakeEnd(Collection, RangeSelector, Value)
+{
+	ReturnIf(RangeSelector == RangeSelectorEnum:Length, Collection:TakeRange(Collection:Length - Value, Value))
+	ReturnIf(RangeSelector == RangeSelectorEnum:PositionInclusive, Collection:TakeRange(Value, Collection:Length - Value))
+	Return(Collection:TakeRange(Value + 1, Collection:Length - Value - 1))
+}
+
+# Private Section
+
+Function _GetStartLocation(RangeSelector, Value)
+{
+	ReturnIf(RangeSelector == RangeSelectorEnum:PositionExclusive, Value + 1)
+	ReturnIf(RangeSelector == RangeSelectorEnum:Ignore, 0)
+	Return(Value)
+}
+
+Function _GetEndLocation(Collection, RangeSelector, Value)
+{
+	ReturnIf(RangeSelector == RangeSelectorEnum:Length, Collection:Length - Value - 1)
+	ReturnIf(RangeSelector == RangeSelectorEnum:PositionExclusive, Value - 1)
+	ReturnIf(RangeSelector == RangeSelectorEnum:Ignore, Collection:Length - 1)
+	Return(Value)
+}

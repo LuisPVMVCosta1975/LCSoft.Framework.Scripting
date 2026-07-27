@@ -1,0 +1,5 @@
+﻿Function GetAbsolute(Value)
+{
+	ReturnIf(Value < 0, Value * -1)
+	Return(Value)
+}
