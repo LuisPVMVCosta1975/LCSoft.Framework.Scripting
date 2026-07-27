@@ -1,0 +1,68 @@
+StringClass = _
+Func GetStringClass()
+{
+	If(StringClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			StringClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.Runtime.dll", "System.String")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			StringClass = CreateAssemblyClass("win-x64/System.Runtime.dll", "System.String")
+		}
+		Else()
+		{
+			StringClass = CreateAssemblyClass("System.Runtime.dll", "System.String")
+		}
+	}
+	
+	Return(StringClass)
+}
+
+#StringClass = CreateLazy(CreateAssemblyClass("System.Runtime.dll", "System.String"))
+#Eval(StringClass):...
+
+EncodingClass = _
+Func GetEncodingClass()
+{
+	If(EncodingClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			EncodingClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.Runtime.dll", "System.Text.Encoding")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			EncodingClass = CreateAssemblyClass("win-x64/System.Runtime.dll", "System.Text.Encoding")
+		}
+		Else()
+		{
+			EncodingClass = CreateAssemblyClass("System.Runtime.dll", "System.Text.Encoding")
+		}
+	}
+	
+	Return(EncodingClass)
+}
+
+ConvertClass = _
+Func GetConvertClass()
+{
+	If(ConvertClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			ConvertClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.Runtime.Extensions.dll", "System.Convert")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			ConvertClass = CreateAssemblyClass("win-x64/System.Runtime.Extensions.dll", "System.Convert")
+		}
+		Else()
+		{
+			ConvertClass = CreateAssemblyClass("System.Runtime.Extensions.dll", "System.Convert")
+		}
+	}
+	
+	Return(ConvertClass)
+}

@@ -1,0 +1,21 @@
+Func CreateConnection(ConnectionString)
+{
+	Return
+	(
+		CreateAssemblyObject
+		(
+			"System.Data.SqlClient.dll", 
+			"System.Data.SqlClient.SqlConnection", 
+			ConnectionString
+		)
+	)
+}
+
+MSSQL = CreateObject(MSSQL)
+Object MSSQL
+{
+	PubFunc CreateConnection(ConnectionString)
+	{
+		Return(CreateAssemblyObject("Microsoft.Data.Sqlite.dll", "Microsoft.Data.Sqlite.SqliteConnection", ConnectionString))
+	}
+}

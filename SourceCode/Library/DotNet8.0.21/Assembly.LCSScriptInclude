@@ -1,0 +1,21 @@
+﻿AssemblyClass = _
+Func GetAssemblyClass()
+{
+	If(AssemblyClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			AssemblyClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.Runtime.dll", "System.Reflection.Assembly")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			AssemblyClass = CreateAssemblyClass("win-x64/System.Runtime.dll", "System.Reflection.Assembly")
+		}
+		Else()
+		{
+			AssemblyClass = CreateAssemblyClass("System.Runtime.dll", "System.Reflection.Assembly")
+		}
+	}
+	
+	Return(AssemblyClass)
+}

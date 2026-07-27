@@ -1,0 +1,4 @@
+Func CreateStreamReader(Stream)
+{
+	Return CreateAssemblyObject("System.Runtime.Extensions.dll", "System.IO.StreamReader", Stream)
+}

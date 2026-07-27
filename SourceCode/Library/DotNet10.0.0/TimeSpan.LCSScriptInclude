@@ -1,0 +1,4 @@
+Func CreateInfiniteTimeSpan()
+{
+	Return CreateAssemblyObject("System.Runtime.dll", "System.TimeSpan", ZeroInt32, ZeroInt32, ZeroInt32, ZeroInt32, MinusOneInt32)
+}

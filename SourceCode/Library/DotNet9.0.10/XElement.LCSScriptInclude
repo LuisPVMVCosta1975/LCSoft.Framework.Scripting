@@ -1,0 +1,63 @@
+﻿XElementClass = _
+Func GetXElementClass()
+{
+	If(XElementClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			XElementClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\9.0.10\\System.Xml.Linq.dll", "System.Xml.Linq.XElement")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			XElementClass = CreateAssemblyClass("win-x64/System.Xml.Linq.dll", "System.Xml.Linq.XElement")
+		}
+		Else()
+		{
+			XElementClass = CreateAssemblyClass("System.Xml.Linq.dll", "System.Xml.Linq.XElement")
+		}
+	}
+	
+	Return(XElementClass)
+}
+
+XNameClass = _
+Func GetXNameClass()
+{
+	If(XNameClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			XNameClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\9.0.10\\System.Xml.Linq.dll", "System.Xml.Linq.XName")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			XNameClass = CreateAssemblyClass("win-x64/System.Xml.Linq.dll", "System.Xml.Linq.XName")
+		}
+		Else()
+		{
+			XNameClass = CreateAssemblyClass("System.Xml.Linq.dll", "System.Xml.Linq.XName")
+		}
+	}
+	
+	Return(XNameClass)
+}
+
+Func CreateXName(Name, Namespace)
+{
+	Return(GetXNameClass():Get(Name, Namespace:IfEmpty("")))
+}
+
+Func GetXElementLocalName(XElement)
+{
+	Return(XElement:Name:LocalName)
+}
+Func GetXElementElement(XElement, ElementName)
+{
+	Element = CreateXName(ElementName)
+	Return(XElement:Element(Element))
+}
+Func GetXElementAttribute(XElement, AttributeName)
+{
+	Attribute = CreateXName(AttributeName)
+	Return(XElement:Attribute(Attribute):Value)
+}

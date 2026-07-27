@@ -1,0 +1,32 @@
+#Include Library/.Net8.0.21/String.LCSScriptInclude
+
+Func CreateHttpListener()
+{
+	Return(CreateAssemblyObject("System.Net.HttpListener.dll", "System.Net.HttpListener"))
+}
+
+Func CreateHttpClient()
+{
+	Return(CreateAssemblyObject("System.Net.Http.dll", "System.Net.Http.HttpClient"))
+}
+
+Func CreateJsonContent(Content)
+{
+	Return(CreateAssemblyObject("System.Net.Http.dll", "System.Net.Http.StringContent", Content, GetEncodingClass():UTF8, "application/json"))
+}
+
+Func CreateXmlContent(Content)
+{
+	Return(CreateAssemblyObject("System.Net.Http.dll", "System.Net.Http.StringContent", Content, GetEncodingClass():UTF8, "application/xml"))
+}
+
+HttpStatusCodeEnum = _
+Func GetHttpStatusCodeEnum()
+{
+	If(HttpStatusCodeEnum:IsEmpty())
+	{
+		HttpStatusCodeEnum = CreateAssemblyClass("System.Net.dll", "System.Net.HttpStatusCode")
+	}
+	
+	Return(HttpStatusCodeEnum)
+}

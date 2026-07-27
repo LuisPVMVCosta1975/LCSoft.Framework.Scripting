@@ -1,0 +1,178 @@
+FileClass = _
+Func GetFileClass()
+{
+	If(FileClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			FileClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.IO.FileSystem.dll", "System.IO.File")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			FileClass = CreateAssemblyClass("win-x64/System.IO.FileSystem.dll", "System.IO.File")
+		}
+		Else()
+		{
+			FileClass = CreateAssemblyClass("System.IO.FileSystem.dll", "System.IO.File")
+		}
+	}
+	
+	Return(FileClass)
+}
+
+FileModeEnum = _
+Func GetFileModeEnum()
+{
+	If(FileModeEnum:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			FileModeEnum = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.Runtime.dll", "System.IO.FileMode")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			FileModeEnum = CreateAssemblyClass("win-x64/System.Runtime.dll", "System.IO.FileMode")
+		}
+		Else()
+		{
+			FileModeEnum = CreateAssemblyClass("System.Runtime.dll", "System.IO.FileMode")
+		}
+	}
+	
+	Return(FileModeEnum)
+}
+
+FileAccessEnum = _
+Func GetFileAccessEnum()
+{
+	If(FileAccessEnum:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			FileAccessEnum = CreateAssemblyClass("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.Runtime.dll", "System.IO.FileAccess")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			FileAccessEnum = CreateAssemblyClass("win-x64/System.Runtime.dll", "System.IO.FileAccess")
+		}
+		Else()
+		{
+			FileAccessEnum = CreateAssemblyClass("System.Runtime.dll", "System.IO.FileAccess")
+		}
+	}
+	
+	Return(FileAccessEnum)
+}
+
+FileShareEnum = _
+Func GetFileShareEnum()
+{
+	If(FileShareEnum:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			FileShareEnum = CreateAssemblyClass("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\8.0.21\\ref\\net8.0\\System.Runtime.dll", "System.IO.FileShare")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			FileShareEnum = CreateAssemblyClass("win-x64/System.Runtime.dll", "System.IO.FileShare")
+		}
+		Else()
+		{
+			FileShareEnum = CreateAssemblyClass("System.Runtime.dll", "System.IO.FileShare")
+		}
+	}
+	
+	Return(FileShareEnum)
+}
+
+Func GetDirectoryInfo(Path)
+{
+	If(IsDebug:IfMissing(False))
+	{
+		Return(CreateAssemblyObject("C:\\Program Files\\dotnet\\shared\\Microsoft.NETCore.App\\8.0.21\\System.IO.FileSystem.dll", "System.IO.DirectoryInfo", Path))
+	}
+	Else(IsRealease:IfMissing(False))
+	{
+		Return(CreateAssemblyObject("win-x64/System.Runtime.dll", "System.IO.DirectoryInfo", Path))
+	}
+	Else()
+	{
+		Return(CreateAssemblyObject("System.Runtime.dll", "System.IO.DirectoryInfo", Path))
+	}
+}
+
+Func ReadAllTextFromFile(FileName)
+{
+	Return(GetFileClass():ReadAllText(FileName))
+}
+
+Func ReadLinesFromFile(FileName)
+{
+	Return(GetFileClass():ReadLines(FileName))
+}
+
+Func CreateFileStream(FileName, FileMode, FileAccess, FileShare)
+{
+	#If(IsEmpty(FileMode))
+	#{
+	#	FileMode = GetFileModeEnum():Open
+	#}
+	#If(IsEmpty(FileAccess))
+	#{
+	#	FileAccess = GetFileAccessEnum():Read
+	#}
+	#If(IsEmpty(FileShare))
+	#{
+	#	FileShare = GetFileShareEnum():None
+	#}
+	#
+	#Return(CreateAssemblyObject("System.IO.FileSystem.dll", "System.IO.FileStream", FileName, FileMode, FileAccess, FileShare))
+
+	Return
+	(
+		CreateAssemblyObject
+		(
+			"System.IO.FileSystem.dll", 
+			"System.IO.FileStream", 
+			FileName, 
+			IfEmpty(FileMode, GetFileModeEnum():Open),
+			IfEmpty(FileAccess, GetFileAccessEnum():Read),
+			IfEmpty(FileShare, GetFileShareEnum():None)
+		)
+	)
+}
+
+Func OpenFile(FileName, FileMode, FileAccess, FileShare)
+{
+	#If(IsEmpty(FileMode))
+	#{
+	#	FileMode = GetFileModeEnum():Open
+	#}
+	#If(IsEmpty(FileAccess))
+	#{
+	#	FileAccess = GetFileAccessEnum():Read
+	#}
+	#If(IsEmpty(FileShare))
+	#{
+	#	FileShare = GetFileShareEnum():None
+	#}
+	#
+	#Return GetFileClass():Open(FileName, FileMode, FileAccess, FileShare)
+
+	Return
+	(
+		GetFileClass():Open
+		(
+			FileName, 
+			IfEmpty(FileMode, GetFileModeEnum():Open),
+			IfEmpty(FileAccess, GetFileAccessEnum():Read),
+			IfEmpty(FileShare, GetFileShareEnum():None)
+		)
+	)
+}
+
+Func OpenTextFile(FileName)
+{
+	Return(GetFileClass():OpenText(FileName))
+}

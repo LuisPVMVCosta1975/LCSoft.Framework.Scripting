@@ -1,0 +1,53 @@
+#Include Library/.Net8.0.21/String.LCSScriptInclude
+
+Func CreateHttpListener()
+{
+		If(IsDebug:IfMissing(False))
+		{
+			Return(CreateAssemblyObject("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\10.0.0\\ref\\net10.0\\System.Net.HttpListener.dll", "System.Net.HttpListener"))
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			Return(CreateAssemblyObject("win-x64/System.Net.HttpListener.dll", "System.Net.HttpListener"))
+		}
+		Else()
+		{
+			Return(CreateAssemblyObject("System.Net.HttpListener.dll", "System.Net.HttpListener"))
+		}
+}
+
+Func CreateHttpClient()
+{
+	Return(CreateAssemblyObject("System.Net.Http.dll", "System.Net.Http.HttpClient"))
+}
+
+Func CreateJsonContent(Content)
+{
+	Return(CreateAssemblyObject("System.Net.Http.dll", "System.Net.Http.StringContent", Content, GetEncodingClass():UTF8, "application/json"))
+}
+
+Func CreateXmlContent(Content)
+{
+	Return(CreateAssemblyObject("System.Net.Http.dll", "System.Net.Http.StringContent", Content, GetEncodingClass():UTF8, "application/xml"))
+}
+
+HttpStatusCodeEnum = _
+Func GetHttpStatusCodeEnum()
+{
+	If(HttpStatusCodeEnum:IsEmpty())
+	{	If(IsDebug:IfMissing(False))
+		{
+			HttpStatusCodeEnum = CreateAssemblyClass("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\10.0.0\\ref\\net10.0\\System.Net.dll", "System.Net.HttpStatusCode")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			HttpStatusCodeEnum = CreateAssemblyClass("win-x64/System.Net.dll", "System.Net.HttpStatusCode")
+		}
+		Else()
+		{
+			HttpStatusCodeEnum = CreateAssemblyClass("System.Net.dll", "System.Net.HttpStatusCode")
+		}
+	}
+	
+	Return(HttpStatusCodeEnum)
+}

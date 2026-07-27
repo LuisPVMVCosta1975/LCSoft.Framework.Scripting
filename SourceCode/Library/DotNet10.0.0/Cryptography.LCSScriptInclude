@@ -1,0 +1,109 @@
+#Include String.LCSScriptInclude
+
+MD5Class = _
+Func GetMD5Class()
+{
+	If(MD5Class:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			MD5Class = CreateAssemblyClass("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\10.0.0\\ref\\net10.0\\System.Security.Cryptography.dll", "System.Security.Cryptography.MD5")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			MD5Class = CreateAssemblyClass("win-x64/System.Security.Cryptography.dll", "System.Security.Cryptography.MD5")
+		}
+		Else()
+		{
+			MD5Class = CreateAssemblyClass("System.Security.Cryptography.dll", "System.Security.Cryptography.MD5")
+		}
+	}
+	
+	Return(MD5Class)
+}
+
+Func CreateMD5Generator()
+{
+	Return(GetMD5Class():Create())
+}
+
+Func GenerateMD5Hash(Text, MD5Generator)
+{
+	If(MD5Generator:IsEmpty())
+	{
+		MD5Generator = CreateMD5Generator()
+	}
+	
+	Return(MD5Generator:ComputeHash(GetEncodingClass():UTF8:GetBytes(Text)))
+}
+
+AESClass = _
+Func GetAESClass()
+{
+	If(AESClass:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			AESClass = CreateAssemblyClass("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\10.0.0\\ref\\net10.0\\System.Security.Cryptography.dll", "System.Security.Cryptography.Aes")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			AESClass = CreateAssemblyClass("win-x64/System.Security.Cryptography.dll", "System.Security.Cryptography.Aes")
+		}
+		Else()
+		{
+			AESClass = CreateAssemblyClass("System.Security.Cryptography.dll", "System.Security.Cryptography.Aes")
+		}
+	}
+	
+	Return(AESClass)
+}
+
+Func CreateAESEngine()
+{
+	Return(GetAESClass():Create())
+}
+
+CipherModeEnum = _
+Func GetCipherModeEnum()
+{
+	If(CipherModeEnum:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			CipherModeEnum = CreateAssemblyClass("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\10.0.0\\ref\\net10.0\\System.Security.Cryptography.dll", "System.Security.Cryptography.CipherMode")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			CipherModeEnum = CreateAssemblyClass("win-x64/System.Security.Cryptography.dll", "System.Security.Cryptography.CipherMode")
+		}
+		Else()
+		{
+			CipherModeEnum = CreateAssemblyClass("System.Security.Cryptography.dll", "System.Security.Cryptography.CipherMode")
+		}
+	}
+	
+	Return(CipherModeEnum)
+}
+
+PaddingModeEnum = _
+Func GetPaddingModeEnum()
+{
+	If(PaddingModeEnum:IsEmpty())
+	{
+		If(IsDebug:IfMissing(False))
+		{
+			PaddingModeEnum = CreateAssemblyClass("C:\\Program Files\\dotnet\\packs\\Microsoft.NETCore.App.Ref\\10.0.0\\ref\\net10.0\\System.Security.Cryptography.dll", "System.Security.Cryptography.PaddingMode")
+		}
+		Else(IsRealease:IfMissing(False))
+		{
+			PaddingModeEnum = CreateAssemblyClass("win-x64/System.Security.Cryptography.dll", "System.Security.Cryptography.PaddingMode")
+		}
+		Else()
+		{
+			PaddingModeEnum = CreateAssemblyClass("System.Security.Cryptography.dll", "System.Security.Cryptography.PaddingMode")
+		}
+	}
+	
+	Return(PaddingModeEnum)
+}
