@@ -1,0 +1,170 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>LCSoft.Framework.Scripting</RootNamespace>
+    <Authors>Luís Costa</Authors>
+    <AssemblyName>LCSoft.Framework.Scripting</AssemblyName>
+    <PackageId>LCSoft.Framework.Scripting</PackageId>
+    <Company>LCSoft</Company>
+    <Description>LCSoft Framework</Description>
+    <Copyright>LCSoft @2017</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Classes\CancelationToken.cs" />
+    <Compile Remove="Classes\Semaphore.cs" />
+    <Compile Remove="Classes\SpawnToken.cs" />
+    <Compile Remove="ValueContainer\ListOfAttributesValueContainer.cs" />
+    <Compile Remove="ValueContainer\ListOfValuesValueContainer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Library\Native\CompareLists.LCSScript" />
+    <None Remove="Library\Native\CompareLists.LCSScriptInclude" />
+    <None Remove="Library\Native\EvenOdd.LCSScriptInclude" />
+    <None Remove="Library\Native\GreatestLowest.LCSScriptInclude" />
+    <None Remove="Library\Native\Math.LCSScriptInclude" />
+    <None Remove="Library\Native\RangeFunctions.LCSScriptInclude" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="LibraryTests\CompareLists.LCSScript">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\Assembly.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\Cryptography.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\FileSystem.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\MSSQL.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\Net.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\SQLite.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\Stream.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\String.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\TimeSpan.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net10.0.0\XElement.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\Native\CompareLists.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LibraryTests\EvenOdd.LCSScript">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\Native\EvenOdd.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LibraryTests\GreatestLowest.LCSScript">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\Native\GreatestLowest.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LibraryTests\Math.LCSScript">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\Native\Math.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\Native\RangeFunctions.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LibraryTests\RangeFunctions.LCSScript">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Library\.Net8.0.21\Cryptography.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\FileSystem.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\MSSQL.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\Net.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\Stream.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\String.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\TimeSpan.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\SQLite.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\Assembly.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net8.0.21\XElement.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\Assembly.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\Cryptography.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\FileSystem.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\MSSQL.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\Net.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\SQLite.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\Stream.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\String.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\TimeSpan.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Library\.Net9.0.10\XElement.LCSScriptInclude">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="ScriptContent\ScriptExpression\CreateObjectScriptExpression.cs" />
+    <None Include="ValueContainer\LiteralValueContainer\DoubleLiteralValueContainer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LCSoft.Framework.Core\Core.csproj" />
+  </ItemGroup>
+
+</Project>
